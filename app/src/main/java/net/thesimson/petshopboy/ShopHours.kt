@@ -9,7 +9,7 @@ object ShopHours {
 
     fun parseBuisinessHours(s:String):Unit{
 
-        val pattern = Regex("(?<days>[\\w-]+)\\s+(?<openh>\\d+)(:(?<openm>\\d+))?\\s*-\\s*(?<closeh>\\d+)(:(?<closem>\\d+))?")
+        val pattern = Regex("""(?<days>[\w-]+)\s+(?<openh>\d+)(:(?<openm>\d+))?\s*-\s*(?<closeh>\d+)(:(?<closem>\d+))?""")
 
         val mat:MatchResult? =pattern.matchEntire(s)
         if (mat != null ){
@@ -20,8 +20,9 @@ object ShopHours {
             val closeMin:Int = groups["closem"]?.value?.toIntOrNull()?:0
 
             openAt = 60 * openHour + openMin
-            closeAt = 60 * closeHour + closeMin        }
-        //TODO: parse opening hours failed, this should be handled.
+            closeAt = 60 * closeHour + closeMin
+        }
+        //TODO: ELSE... parse opening hours failed, this should be handled.
     }
 
     fun isShopIsOpen(time:Calendar):Boolean{
