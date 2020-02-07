@@ -15,25 +15,16 @@ class ExampleUnitTest {
     fun verifyShopHours() {
 
         ShopHours.parseBuisinessHours("M-F 9:00 - 18:00")
-        assert(ShopHours.openAt.get(Calendar.HOUR_OF_DAY) == 9 )
-        assert(ShopHours.openAt.get(Calendar.MINUTE) == 0 )
-
-        assert(ShopHours.closeAt.get(Calendar.HOUR_OF_DAY) == 18 )
-        assert(ShopHours.closeAt.get(Calendar.MINUTE) == 0 )
+        assert(ShopHours.openAt == 9*60 )
+        assert(ShopHours.closeAt == 18*60 )
 
         ShopHours.parseBuisinessHours("M-F 8:01 - 23:45")
-        assert(ShopHours.openAt.get(Calendar.HOUR_OF_DAY) == 8 )
-        assert(ShopHours.openAt.get(Calendar.MINUTE) == 1 )
-
-        assert(ShopHours.closeAt.get(Calendar.HOUR_OF_DAY) == 23 )
-        assert(ShopHours.closeAt.get(Calendar.MINUTE) == 45 )
+        assert(ShopHours.openAt == 8*60+1 )
+        assert(ShopHours.closeAt == 23*60+45 )
 
         ShopHours.parseBuisinessHours("M-F 10 - 19")
-        assert(ShopHours.openAt.get(Calendar.HOUR_OF_DAY) == 10 )
-        assert(ShopHours.openAt.get(Calendar.MINUTE) == 0 )
-
-        assert(ShopHours.closeAt.get(Calendar.HOUR_OF_DAY) == 19 )
-        assert(ShopHours.closeAt.get(Calendar.MINUTE) == 0 )
+        assert(ShopHours.openAt == 10*60 )
+        assert(ShopHours.closeAt == 19*60 )
 
 
         val now = Calendar.getInstance()

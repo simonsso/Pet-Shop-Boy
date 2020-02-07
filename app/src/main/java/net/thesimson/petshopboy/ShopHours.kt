@@ -4,8 +4,8 @@ import java.util.*
 
 object ShopHours {
     // TODO support for weekends and work days
-    var openAt:Calendar = Calendar.getInstance()
-    var closeAt:Calendar = Calendar.getInstance()
+    var openAt:Int = 0
+    var closeAt:Int = 0
 
     fun parseBuisinessHours(s:String):Unit{
 
@@ -19,17 +19,12 @@ object ShopHours {
             val closeHour:Int = groups["closeh"]?.value?.toIntOrNull()?:0
             val closeMin:Int = groups["closem"]?.value?.toIntOrNull()?:0
 
-            openAt.set(0, 0, 0, openHour, openMin, 0)
-            closeAt.set(0, 0, 0, closeHour, closeMin, 0)
-        }
+            openAt = 60 * openHour + openMin
+            closeAt = 60 * closeHour + closeMin        }
         //TODO: parse opening hours failed, this should be handled.
     }
 
     fun isShopIsOpen(time:Calendar):Boolean{
-        val time = time.clone() as Calendar
-        time.set(Calendar.YEAR,0)
-        time.set(Calendar.MONTH,0)
-        time.set(Calendar.DAY_OF_MONTH,0)
-        return time in openAt..closeAt
+        return  time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) in openAt..closeAt
     }
 }
