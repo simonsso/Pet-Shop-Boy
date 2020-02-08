@@ -25,7 +25,8 @@
             android:layout_weight="1"
             android:background="@color/button_blue"
             android:text="@string/chatme"
-            android:textColor="@color/button_text_white" />
+            android:textColor="@color/button_text_white"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/call_button"
@@ -37,7 +38,8 @@
             android:layout_weight="1"
             android:background="@color/button_green"
             android:text="@string/callme"
-            android:textColor="@color/button_text_white" />
+            android:textColor="@color/button_text_white"
+            android:visibility="visible" />
 
     </LinearLayout>
 
@@ -52,4 +54,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/callchatbar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/workHours" />
 </androidx.constraintlayout.widget.ConstraintLayout>
