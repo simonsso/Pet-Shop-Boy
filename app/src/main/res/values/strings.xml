@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Pet Shop Boy</string>
+    <string name="chatme">Chat</string>
+    <string name="callme">Call</string>
 </resources>
