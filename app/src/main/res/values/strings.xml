@@ -2,4 +2,5 @@
     <string name="app_name">Pet Shop Boy</string>
     <string name="chatme">Chat</string>
     <string name="callme">Call</string>
+    <string name="hours_not_loaded_from_config">Hours not loaded from config</string>
 </resources>
