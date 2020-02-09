@@ -2,17 +2,19 @@ package net.thesimson.petshopboy
 
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.UiThread
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
+    @UiThread
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,7 +49,6 @@ class MainActivity : AppCompatActivity() {
         val config_json_string = application.assets.open("config.json").bufferedReader().use{
             it.readText()
         }
-
         // NB file is known to be malformated json finding the outermost JSONObject
         val config = JSONObject( config_json_string.substring(config_json_string.indexOf("{"), config_json_string.lastIndexOf("}") + 1))
 
@@ -71,6 +72,19 @@ class MainActivity : AppCompatActivity() {
             workHours.text= "Not loaded"
         }
 
+        val pets_json_string = application.assets.open("pets.json").bufferedReader().use{
+            it.readText()
+        }
+        // NB file is known to be malformated json finding the outermost JSONObject
+        val pets = JSONArray( pets_json_string.substring(pets_json_string.indexOf("["), pets_json_string.lastIndexOf("]") + 1))
+
+
+
+        val adapter = SensorListRecyclerViewAdapter(this, pets, { x-> {}  })
+
+        recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recycler_view.adapter = adapter
+        adapter.notifyDataSetChanged()
 //        val pets_string = application.assets.open("pets.json").bufferedReader().use{
 //            it.readText()
 //        }
