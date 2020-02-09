@@ -44,19 +44,20 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         val config_json_string = application.assets.open("config.json").bufferedReader().use{
             it.readText()
         }
 
+        // NB file is known to be malformated json finding the outermost JSONObject
         val config = JSONObject( config_json_string.substring(config_json_string.indexOf("{"), config_json_string.lastIndexOf("}") + 1))
-        if ( config.optBoolean("isChatEnabled",false) ){
+
+        if ( config.optBoolean("isChatEnabled") ){
             chat_button.visibility = View.VISIBLE
         }else{
             chat_button.visibility = View.GONE
         }
 
-        if ( config.optBoolean("isCallEnabled",false) ){
+        if ( config.optBoolean("isCallEnabled") ){
             call_button.visibility = View.VISIBLE
         }else{
             call_button.visibility = View.GONE
@@ -64,7 +65,8 @@ class MainActivity : AppCompatActivity() {
 
         if (config.has("workHours")) {
             ShopHours.parseBuisinessHours(config.optString("workHours"))
-            workHours.text=config.optString("workHours")
+            workHours.text=resources.getString(R.string.officehours) +
+                           " " + config.optString("workHours")
         }else{
             workHours.text= "Not loaded"
         }

@@ -32,7 +32,7 @@ object ShopHours {
         //TODO: ELSE... parse opening hours failed, this should be handled.
     }
 
-    fun isShopIsOpen(time:Calendar):Boolean{
+    fun isShopOpen(time:Calendar):Boolean{
         return  time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) in openAt..closeAt
     }
 }

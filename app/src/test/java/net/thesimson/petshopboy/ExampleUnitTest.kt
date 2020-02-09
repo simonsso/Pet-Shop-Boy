@@ -31,11 +31,11 @@ class ExampleUnitTest {
         now.set(2020,2,3,22,22,10)
         assert(now.get(Calendar.YEAR) == 2020)
 
-        assertEquals(ShopHours.isShopIsOpen(now), false)
+        assertEquals(ShopHours.isShopOpen(now), false)
         now.set(2020,2,3,10,22,10)
-        assertEquals(ShopHours.isShopIsOpen(now), true)
+        assertEquals(ShopHours.isShopOpen(now), true)
         now.set(2020,2,3,18,59,59)
-        assertEquals(ShopHours.isShopIsOpen(now), true)
+        assertEquals(ShopHours.isShopOpen(now), true)
 
     }
 }
