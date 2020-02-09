@@ -25,15 +25,14 @@ class ExampleInstrumentedTest {
 
 
         val example_json:String = """
-"settings": {
-"isChatEnabled" : true,
-"isCallEnabled" : true,
-"workHours" : "M-F 9:00 - 19:00"
-}
-"""
+                "settings": {
+                "isChatEnabled" : true,
+                "isCallEnabled" : true,
+                "workHours" : "M-F 9:00 - 18:00"
+                }
+                """
 
-
-            val example_pets = """"pets": [
+        val example_pets = """"pets": [
         {
             "image_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Cat_poster_1.jpg/1200px-Cat_poster_1.jpg",
             "title": "Cat",
