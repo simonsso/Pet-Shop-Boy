@@ -13,47 +13,54 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
 import java.net.URL
+import java.util.*
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
+
+    fun displayOpenHours() {
+        // build alert dialog
+        val dialogBuilder = AlertDialog.Builder(this)
+
+        // set message of alert dialog
+
+        val storeOpenGreetingMessage:String = if( ShopHours.isShopOpen(Calendar.getInstance()) ){
+                resources.getString(R.string.thanksshopopen)
+            }else {
+                resources.getString(R.string.thanksshopclosed)
+        }
+        dialogBuilder.setMessage(storeOpenGreetingMessage)
+            // if the dialog is cancelable
+            .setCancelable(false)
+            // negative button text and action
+            .setPositiveButton(resources.getString(R.string.ok), DialogInterface.OnClickListener { dialog, id ->
+                dialog.cancel()
+            })
+
+        // create dialog box
+        val alert = dialogBuilder.create()
+        // set title for alert dialog box
+        alert.setTitle("AlertDialogExample")
+        // show alert dialog
+        alert.show()
+    }
 
     @UiThread
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // One time disposable buttons ;-)
-        chat_button.setOnClickListener { chat_button.visibility = View.GONE }
-//        call_button.setOnClickListener { call_button.visibility = View.GONE }
-
-        // when button is clicked, show the alert
-        call_button.setOnClickListener {
-            // build alert dialog
-            val dialogBuilder = AlertDialog.Builder(this)
-
-            // set message of alert dialog
-            dialogBuilder.setMessage("Do you want to close this application ?")
-                // if the dialog is cancelable
-                .setCancelable(false)
-                // negative button text and action
-                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
-                    dialog.cancel()
-                })
-
-            // create dialog box
-            val alert = dialogBuilder.create()
-            // set title for alert dialog box
-            alert.setTitle("AlertDialogExample")
-            // show alert dialog
-            alert.show()
-        }
+        call_button.setOnClickListener{displayOpenHours()}
+        chat_button.setOnClickListener{displayOpenHours()}
 
 
         val t1 = thread{
-            // Spin off in network theread
+            // Spin off in network thread
             val config_url = URL("https://simonsso.github.io/Pet-Shop-Boy/config.json")
 
             try {
+
+                // TODO cache network and handle use case network was gone but is back now.
                 val config_json_string = config_url.readText()
                 // NB file is known to be malformated json finding the outermost JSONObject
                 val config = JSONObject(
