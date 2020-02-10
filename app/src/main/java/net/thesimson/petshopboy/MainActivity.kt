@@ -11,6 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
+import java.lang.Exception
+import java.net.URL
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,8 +36,8 @@ class MainActivity : AppCompatActivity() {
                 // if the dialog is cancelable
                 .setCancelable(false)
                 // negative button text and action
-                .setPositiveButton("OK", DialogInterface.OnClickListener {
-                        dialog, id -> dialog.cancel()
+                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                    dialog.cancel()
                 })
 
             // create dialog box
@@ -46,30 +49,44 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val config_json_string = application.assets.open("config.json").bufferedReader().use{
-            it.readText()
-        }
-        // NB file is known to be malformated json finding the outermost JSONObject
-        val config = JSONObject( config_json_string.substring(config_json_string.indexOf("{"), config_json_string.lastIndexOf("}") + 1))
+        val t1 = thread{
+            // Spin off in network theread
+            val config_url = URL("https://simonsso.github.io/Pet-Shop-Boy/config.json")
 
-        if ( config.optBoolean("isChatEnabled") ){
-            chat_button.visibility = View.VISIBLE
-        }else{
-            chat_button.visibility = View.GONE
-        }
+            try {
+                val config_json_string = config_url.readText()
+                // NB file is known to be malformated json finding the outermost JSONObject
+                val config = JSONObject(
+                    config_json_string.substring(
+                        config_json_string.indexOf("{"),
+                        config_json_string.lastIndexOf("}") + 1
+                    )
+                )
+                this@MainActivity.runOnUiThread {
+                    if (config.optBoolean("isChatEnabled")) {
+                        chat_button.visibility = View.VISIBLE
+                    } else {
+                        chat_button.visibility = View.GONE
+                    }
 
-        if ( config.optBoolean("isCallEnabled") ){
-            call_button.visibility = View.VISIBLE
-        }else{
-            call_button.visibility = View.GONE
-        }
+                    if (config.optBoolean("isCallEnabled")) {
+                        call_button.visibility = View.VISIBLE
+                    } else {
+                        call_button.visibility = View.GONE
+                    }
 
-        if (config.has("workHours")) {
-            ShopHours.parseBuisinessHours(config.optString("workHours"))
-            workHours.text=resources.getString(R.string.officehours) +
-                           " " + config.optString("workHours")
-        }else{
-            workHours.text= "Not loaded"
+                    if (config.has("workHours")) {
+                        ShopHours.parseBuisinessHours(config.optString("workHours"))
+                        workHours.text = resources.getString(R.string.officehours) +
+                                " " + config.optString("workHours")
+                    } else {
+                        workHours.text = "Not loaded"
+                    }
+                }
+            }catch (e:Exception){
+                // Network error
+            }
+
         }
 
         val pets_json_string = application.assets.open("pets.json").bufferedReader().use{
