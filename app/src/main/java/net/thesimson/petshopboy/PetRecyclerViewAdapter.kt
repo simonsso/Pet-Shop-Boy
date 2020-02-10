@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.concurrent.thread
 
 
 class SensorListRecyclerViewAdapter(private var context: Context, private var dataList:JSONArray, private  var myOnClicked:(String)->Unit):
@@ -34,6 +35,14 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
                 }
                 holderMapping[curItem.optString("title")] = holder
 
+                val url = curItem.optString("image_url")
+                if (url!=""){
+                    if ( PawCache.isCached(url) ){
+                        holder.icon.setImageBitmap(PawCache.get(url))
+                    }else{
+                        PawCache.request(url,holder.icon)
+                    }
+                }
             }
         }catch (e:JSONException){
             println(e.message)
