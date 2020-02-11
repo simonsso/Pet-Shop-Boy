@@ -1,16 +1,19 @@
 package net.thesimson.petshopboy
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Handler
 import android.widget.ImageView
 import okhttp3.*
 import java.io.IOException
+import java.util.concurrent.ConcurrentHashMap
 
 import kotlin.concurrent.thread
 
 
 object PawCache {
     lateinit var client: OkHttpClient
+    val cache = ConcurrentHashMap<String, Bitmap>()
 
     fun requestContent(url: String, onDataFetched:(String)->Unit ){
         thread {
@@ -32,8 +35,13 @@ object PawCache {
         }
     }
 
+
     fun requestImage(url: String, dest: ImageView) {
         val uiThreadHandler=Handler()
+        if( cache.containsKey(url)){
+            dest.setImageBitmap(cache[url])
+            return
+        }
         thread {
             try {
                 val request = Request.Builder().url(url).build()
@@ -43,6 +51,7 @@ object PawCache {
                             if (!response.isSuccessful) return
                             val bm = BitmapFactory.decodeStream(response.body!!.byteStream())
                             uiThreadHandler.post(Runnable {
+                                cache[url]=bm
                                 dest.setImageBitmap(bm)
                             })
                         }
