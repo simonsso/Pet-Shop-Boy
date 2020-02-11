@@ -1,13 +1,18 @@
 package net.thesimson.petshopboy
 
+import androidx.annotation.UiThread
 import java.util.*
 
 object ShopHours {
     // TODO support for weekends and work days
     var openAt:Int = 0
     var closeAt:Int = 0
+    var humanReadableSign:String = ""
+    var chatEnabled:Boolean = false
+    var callEnabled:Boolean = false
 
-    fun parseBuisinessHours(s:String):Unit{
+    @UiThread
+    fun parseBuisinessHours(s:String):Boolean{
         // Whops, Retrieving groups by name is not supported on this platform.
         // Use group numbers
         // Days: 1
@@ -29,10 +34,13 @@ object ShopHours {
 
             openAt = 60 * openHour + openMin
             closeAt = 60 * closeHour + closeMin
+            humanReadableSign = s
+            return true
+        }else{
+            return false
         }
-        //TODO: ELSE... parse opening hours failed, this should be handled.
     }
-
+    @UiThread
     fun isShopOpen(time:Calendar):Boolean{
         return  time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) in openAt..closeAt
     }

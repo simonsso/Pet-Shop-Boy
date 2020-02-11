@@ -16,13 +16,11 @@ import java.util.*
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
-
     @UiThread
     fun displayOpenHours() {
-        // build alert dialog
+        // Create an alertbox dialog
         val dialogBuilder = AlertDialog.Builder(this)
 
-        // set message of alert dialog
         val storeOpenGreetingMessage:String = if( ShopHours.isShopOpen(Calendar.getInstance()) ){
                 resources.getString(R.string.thanksshopopen)
             }else {
@@ -33,15 +31,29 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton(resources.getString(R.string.ok), DialogInterface.OnClickListener { dialog, _id ->
                 dialog.cancel()
             })
-
-        // create dialog box
         val alert = dialogBuilder.create()
-        // set title for alert dialog box
-        alert.setTitle("AlertDialogExample")
-        // show alert dialog
+        alert.setTitle(resources.getString(R.string.alerttitle))
         alert.show()
     }
 
+    @UiThread
+    fun updateCallButtonsVisability(){
+        chat_button.visibility = if (ShopHours.chatEnabled) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        call_button.visibility = if (ShopHours.callEnabled) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+        workHours.text = if (ShopHours.humanReadableSign != "") {
+             resources.getString(R.string.officehours) + "  " + ShopHours.humanReadableSign
+        } else {
+            resources.getString(R.string.hours_not_loaded_from_config)
+        }
+    }
     @UiThread
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,15 +61,13 @@ class MainActivity : AppCompatActivity() {
 
         call_button.setOnClickListener{displayOpenHours()}
         chat_button.setOnClickListener{displayOpenHours()}
-
+        updateCallButtonsVisability()
 
         val t1 = thread{
             // Spin off in network thread
             val config_url = URL("https://simonsso.github.io/Pet-Shop-Boy/config.json")
 
             try {
-
-                // TODO cache network and handle use case network was gone but is back now.
                 val config_json_string = config_url.readText()
                 // NB file is known to be malformated json finding the outermost JSONObject
                 val config = JSONObject(
@@ -66,29 +76,16 @@ class MainActivity : AppCompatActivity() {
                         config_json_string.lastIndexOf("}") + 1
                     )
                 )
+                // Config loaded OK, update UI!
                 this@MainActivity.runOnUiThread {
-                    if (config.optBoolean("isChatEnabled")) {
-                        chat_button.visibility = View.VISIBLE
-                    } else {
-                        chat_button.visibility = View.GONE
-                    }
+                    ShopHours.parseBuisinessHours(config.optString("workHours"))
+                    ShopHours.chatEnabled = config.optBoolean("isChatEnabled")
+                    ShopHours.callEnabled = config.optBoolean("isCallEnabled")
 
-                    if (config.optBoolean("isCallEnabled")) {
-                        call_button.visibility = View.VISIBLE
-                    } else {
-                        call_button.visibility = View.GONE
-                    }
-
-                    if (config.has("workHours")) {
-                        ShopHours.parseBuisinessHours(config.optString("workHours"))
-                        workHours.text = resources.getString(R.string.officehours) +
-                                " " + config.optString("workHours")
-                    } else {
-                        workHours.text = "Not loaded"
-                    }
+                    updateCallButtonsVisability()
                 }
             }catch (e:Exception){
-                // Network error
+                // Network error or other rerun when view is updated on phone turn or link clicked.
             }
 
         }
