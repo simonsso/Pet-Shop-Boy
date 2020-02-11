@@ -1,6 +1,5 @@
 package net.thesimson.petshopboy
 
-
 import android.app.AlertDialog
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity

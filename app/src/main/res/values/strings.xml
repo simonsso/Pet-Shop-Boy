@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Pet Shop Boy</string>
+    <string name="app_name">Pet Shop Boy - Veterinary Clinic</string>
     <string name="chatme">Chat</string>
     <string name="callme">Call</string>
     <string name="hours_not_loaded_from_config">Hours not loaded from config</string>
@@ -7,5 +7,5 @@
     <string name="thanksshopopen">Thank you for getting in touch with us. We’ll get back to you as soon as possible</string>
     <string name="thanksshopclosed">Work hours has ended. Please contact us again on the next work day</string>
     <string name="ok">OK</string>
-    <string name="title_activity_pet_browser">PetBrowserActivity</string>
+    <string name="title_activity_pet_browser">Pet Shop Boy - Veterinary Clinic Pet Information Databank</string>
 </resources>

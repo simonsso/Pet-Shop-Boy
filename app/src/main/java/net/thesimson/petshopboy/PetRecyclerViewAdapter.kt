@@ -20,7 +20,6 @@ import android.content.Intent
 
 class SensorListRecyclerViewAdapter(private var context: Context, private var dataList:JSONArray, private  var myOnClicked:(String)->Unit):
     RecyclerView.Adapter<SensorListRecyclerViewAdapter.ViewHolder>() {
-    private var holderMapping= HashMap<String,ViewHolder>()
     override fun getItemCount(): Int {
         return dataList.length();
     }
@@ -33,11 +32,9 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
             val curItem = dataList[position]
 
             if (curItem is JSONObject) {
-                holder.textView.text = curItem.optString("title")
-                holder.textView.setOnClickListener {
-                    //                notify(curItem)
-                }
-                holderMapping[curItem.optString("title")] = holder
+
+                val petname = curItem.optString("title")
+                holder.textView.text = petname
 
                 val image_url = curItem.optString("image_url")
                 val content_url = curItem.optString("content_url")
@@ -53,6 +50,7 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
                 holder.top.setOnClickListener {
                     val intent : Intent = Intent( context, PetBrowserActivity::class.java)
                     intent.putExtra("loadurl",content_url)
+                    intent.putExtra("petname",petname)
                     context.startActivity( intent )
                 }
             }
