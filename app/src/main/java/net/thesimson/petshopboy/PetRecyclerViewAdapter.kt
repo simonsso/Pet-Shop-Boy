@@ -91,8 +91,8 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
 //    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView:TextView =itemView!!.findViewById(R.id.petRVTextView)
-        val icon:ImageView =itemView!!.findViewById(R.id.petRVImageView)
-        val top:LinearLayout =itemView!!.findViewById(R.id.petRVLinearLayout)
+        val textView:TextView =itemView.findViewById(R.id.petRVTextView)
+        val icon:ImageView =itemView.findViewById(R.id.petRVImageView)
+        val top:LinearLayout =itemView.findViewById(R.id.petRVLinearLayout)
     }
 }

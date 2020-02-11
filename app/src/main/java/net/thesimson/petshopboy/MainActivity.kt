@@ -17,22 +17,20 @@ import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
+    @UiThread
     fun displayOpenHours() {
         // build alert dialog
         val dialogBuilder = AlertDialog.Builder(this)
 
         // set message of alert dialog
-
         val storeOpenGreetingMessage:String = if( ShopHours.isShopOpen(Calendar.getInstance()) ){
                 resources.getString(R.string.thanksshopopen)
             }else {
                 resources.getString(R.string.thanksshopclosed)
         }
         dialogBuilder.setMessage(storeOpenGreetingMessage)
-            // if the dialog is cancelable
             .setCancelable(false)
-            // negative button text and action
-            .setPositiveButton(resources.getString(R.string.ok), DialogInterface.OnClickListener { dialog, id ->
+            .setPositiveButton(resources.getString(R.string.ok), DialogInterface.OnClickListener { dialog, _id ->
                 dialog.cancel()
             })
 
