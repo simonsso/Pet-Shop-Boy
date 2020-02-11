@@ -11,9 +11,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
-import java.net.URL
 import java.util.*
-import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     @UiThread
@@ -63,19 +61,16 @@ class MainActivity : AppCompatActivity() {
         chat_button.setOnClickListener{displayOpenHours()}
         updateCallButtonsVisability()
 
-        val t1 = thread{
-            // Spin off in network thread
-            val config_url = URL("https://simonsso.github.io/Pet-Shop-Boy/config.json")
-
+        PawCache.requestContent( "https://simonsso.github.io/Pet-Shop-Boy/config.json") { config_json_string ->
+            // NB file is known to be malformated json finding the outermost JSONObject
             try {
-                val config_json_string = config_url.readText()
-                // NB file is known to be malformated json finding the outermost JSONObject
                 val config = JSONObject(
                     config_json_string.substring(
                         config_json_string.indexOf("{"),
                         config_json_string.lastIndexOf("}") + 1
                     )
                 )
+
                 // Config loaded OK, update UI!
                 this@MainActivity.runOnUiThread {
                     ShopHours.parseBuisinessHours(config.optString("workHours"))
@@ -84,28 +79,37 @@ class MainActivity : AppCompatActivity() {
 
                     updateCallButtonsVisability()
                 }
-            }catch (e:Exception){
-                // Network error or other rerun when view is updated on phone turn or link clicked.
+            } catch (e: Exception) {
             }
-
         }
 
-        val pets_json_string = application.assets.open("pets.json").bufferedReader().use{
-            it.readText()
+        val adapter = SensorListRecyclerViewAdapter(this, PetZoo.pets, { x-> {}  })
+
+        PawCache.requestContent("https://simonsso.github.io/Pet-Shop-Boy/pets.json") {pets_json_string->
+            try {
+                // NB file is known to be malformated json finding the outermost JSONObject
+                val temp_net_pets = JSONArray(
+                    pets_json_string.substring(
+                        pets_json_string.indexOf("["),
+                        pets_json_string.lastIndexOf("]") + 1
+                    )
+                )
+                PetZoo.pets.clear()
+                for (i in 0 until temp_net_pets.length()) {
+                    if (temp_net_pets[i] is JSONObject) {
+                        PetZoo.pets.add(temp_net_pets[i] as JSONObject)
+                    }
+                }
+                this@MainActivity.runOnUiThread {
+                    adapter.notifyDataSetChanged()
+                }
+            }catch (e:Exception){}
         }
-        // NB file is known to be malformated json finding the outermost JSONObject
-        val pets = JSONArray( pets_json_string.substring(pets_json_string.indexOf("["), pets_json_string.lastIndexOf("]") + 1))
 
 
-
-        val adapter = SensorListRecyclerViewAdapter(this, pets, { x-> {}  })
 
         recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recycler_view.adapter = adapter
         adapter.notifyDataSetChanged()
-//        val pets_string = application.assets.open("pets.json").bufferedReader().use{
-//            it.readText()
-//        }
-
     }
 }

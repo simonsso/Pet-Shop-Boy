@@ -14,14 +14,16 @@ import org.json.JSONObject
 import android.content.Intent
 
 
+object PetZoo{
+    var pets = ArrayList<JSONObject>()
+}
 
 
 
-
-class SensorListRecyclerViewAdapter(private var context: Context, private var dataList:JSONArray, private  var myOnClicked:(String)->Unit):
+class SensorListRecyclerViewAdapter(private var context: Context, private var dataList:ArrayList<JSONObject>, private  var myOnClicked:(String)->Unit):
     RecyclerView.Adapter<SensorListRecyclerViewAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
-        return dataList.length();
+        return dataList.size
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.pet_row_item, parent, false))
@@ -40,11 +42,7 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
                 val content_url = curItem.optString("content_url")
 
                 if (image_url!=""){
-                    if ( PawCache.isCached(image_url) ){
-                        holder.icon.setImageBitmap(PawCache.get(image_url))
-                    }else{
-                        PawCache.request(image_url,holder.icon)
-                    }
+                    PawCache.requestImage(image_url,holder.icon)
                 }
 
                 holder.top.setOnClickListener {
@@ -58,37 +56,7 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
             println(e.message)
             println(e.localizedMessage)
         }
-//        if(curItem == suportedsensorsDataList.selected) {
-//            holder.icon.setImageResource(R.drawable.ic_cloud_done_black_24dp)
-//        }else{
-//            holder.icon.setImageResource(R.drawable.ic_cloud_off_black_24dp)
-//        }
-//        holder.icon.visibility = View.VISIBLE
-
     }
-
-//    @UiThread
-//    public  fun notify_active(){
-//        for (curItem in suportedsensorsDataList.dataList ) {
-//
-//            val icon = holderMapping[curItem]?.icon
-//            if (curItem == suportedsensorsDataList.selected) {
-//                icon?.setImageResource(R.drawable.ic_cloud_done_black_24dp)
-//            } else {
-//                icon?.setImageResource(R.drawable.ic_cloud_off_black_24dp)
-//            }
-//            icon?.visibility = View.VISIBLE
-//        }
-//    }
-//    @UiThread
-//    public fun notify(id:String) {
-//        val view = holderMapping[id]?.top
-//        if(id == suportedsensorsDataList.selected) {
-//            holderMapping[id]?.icon?.setImageResource(R.drawable.ic_cloud_done_black_24dp)
-//        }else {
-//            holderMapping[id]?.icon?.setImageResource(R.drawable.ic_cloud_pending_orande_24dp)
-//        }
-//    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView:TextView =itemView.findViewById(R.id.petRVTextView)
