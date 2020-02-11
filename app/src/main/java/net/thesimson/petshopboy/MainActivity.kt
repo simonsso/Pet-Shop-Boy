@@ -94,21 +94,18 @@ class MainActivity : AppCompatActivity() {
                         pets_json_string.lastIndexOf("]") + 1
                     )
                 )
-                PetZoo.pets.clear()
-                for (i in 0 until temp_net_pets.length()) {
-                    if (temp_net_pets[i] is JSONObject) {
-                        PetZoo.pets.add(temp_net_pets[i] as JSONObject)
-                    }
-                }
                 this@MainActivity.runOnUiThread {
+                    PetZoo.pets.clear()
+                    for (i in 0 until temp_net_pets.length()) {
+                        if (temp_net_pets[i] is JSONObject) {
+                            PetZoo.pets.add(temp_net_pets[i] as JSONObject)
+                        }
+                    }
                     adapter.notifyDataSetChanged()
                 }
             }catch (e:Exception){}
         }
 
-
-
-//        recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recycler_view.adapter = adapter
         adapter.notifyDataSetChanged()
     }
