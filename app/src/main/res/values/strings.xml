@@ -7,4 +7,5 @@
     <string name="thanksshopopen">Thank you for getting in touch with us. We’ll get back to you as soon as possible</string>
     <string name="thanksshopclosed">Work hours has ended. Please contact us again on the next work day</string>
     <string name="ok">OK</string>
+    <string name="title_activity_pet_browser">PetBrowserActivity</string>
 </resources>
