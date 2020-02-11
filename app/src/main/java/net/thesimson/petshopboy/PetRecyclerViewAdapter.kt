@@ -20,7 +20,7 @@ object PetZoo{
 
 
 
-class SensorListRecyclerViewAdapter(private var context: Context, private var dataList:ArrayList<JSONObject>, private  var myOnClicked:(String)->Unit):
+class SensorListRecyclerViewAdapter(private var context: Context, private var dataList:ArrayList<JSONObject>):
     RecyclerView.Adapter<SensorListRecyclerViewAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return dataList.size

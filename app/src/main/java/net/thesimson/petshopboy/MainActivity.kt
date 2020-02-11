@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val adapter = SensorListRecyclerViewAdapter(this, PetZoo.pets, { x-> {}  })
+        val adapter = SensorListRecyclerViewAdapter(this, PetZoo.pets)
 
         PawCache.requestContent("https://simonsso.github.io/Pet-Shop-Boy/pets.json") {pets_json_string->
             try {
@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+//        recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recycler_view.adapter = adapter
         adapter.notifyDataSetChanged()
     }
