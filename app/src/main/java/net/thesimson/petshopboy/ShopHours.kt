@@ -42,6 +42,8 @@ object ShopHours {
     }
     @UiThread
     fun isShopOpen(time:Calendar):Boolean{
+        if(time.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
+           time.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY ) return false
         return  time.get(Calendar.HOUR_OF_DAY) * 60 + time.get(Calendar.MINUTE) in openAt..closeAt
     }
 }

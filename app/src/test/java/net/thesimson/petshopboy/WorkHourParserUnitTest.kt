@@ -10,7 +10,7 @@ import java.util.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class WorkHourParserUnitTest {
     @Test
     fun verifyShopHours() {
 
@@ -36,6 +36,20 @@ class ExampleUnitTest {
         assertEquals(ShopHours.isShopOpen(now), true)
         now.set(2020,2,3,18,59,59)
         assertEquals(ShopHours.isShopOpen(now), true)
+
+        // Try a Sunday
+        now.set(2020,1,9,18,59,59)
+        assertEquals(ShopHours.isShopOpen(now), false)
+
+
+        // Try a Saturday
+        now.set(2020,1,8,18,59,59)
+        assertEquals(ShopHours.isShopOpen(now), false)
+
+        // And a Friday
+        now.set(2020,1,7,18,59,59)
+        assertEquals(ShopHours.isShopOpen(now), true)
+
 
     }
 }
