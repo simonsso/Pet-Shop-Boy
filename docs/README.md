@@ -15,4 +15,5 @@ Android app mimicking a pet shop built in a few days just for fun!
 * if network is unavailable while starting app, turn [hone to reload UI when network is restored.
 
 ## Screenshot
-![Screenshot](Screenshot_2020-02-12-12-39-32-642_net.thesimson.petshopboy.jpg)
+![Screenshot fablet](Screenshot_2020-02-12-12-39-32-642_net.thesimson.petshopboy.jpg)
+![Screenshot phone](Screenshot_1581480520.png)
