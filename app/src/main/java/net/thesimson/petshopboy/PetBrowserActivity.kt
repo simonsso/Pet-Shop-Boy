@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_pet_browser.*
 
-
+// PetBrowser is a glorified name for Wikipedia in an integrated web browser
 class PetBrowserActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

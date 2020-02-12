@@ -13,6 +13,7 @@ import kotlin.concurrent.thread
 
 object PawCache {
     lateinit var client: OkHttpClient
+
     val cache = ConcurrentHashMap<String, Bitmap>()
 
     fun requestContent(url: String, onDataFetched:(String)->Unit ){
@@ -35,23 +36,26 @@ object PawCache {
         }
     }
 
+    // Request image, and load it into ImageView
+    // Errors are ignored here- a new attempt to fetch an uncached image
+    // will be made next time UI needs it...
 
-    fun requestImage(url: String, dest: ImageView) {
+    fun requestImage(imageUrl: String, dest: ImageView) {
         val uiThreadHandler=Handler()
-        if( cache.containsKey(url)){
-            dest.setImageBitmap(cache[url])
+        if( cache.containsKey(imageUrl)){
+            dest.setImageBitmap(cache[imageUrl])
             return
         }
         thread {
             try {
-                val request = Request.Builder().url(url).build()
+                val request = Request.Builder().url(imageUrl).build()
                 client.newCall(request)
                     .enqueue (object :Callback  {
                         override fun onResponse(call: Call, response: Response) {
                             if (!response.isSuccessful) return
                             val bm = BitmapFactory.decodeStream(response.body!!.byteStream())
                             uiThreadHandler.post(Runnable {
-                                cache[url]=bm
+                                cache[imageUrl]=bm
                                 dest.setImageBitmap(bm)
                             })
                         }

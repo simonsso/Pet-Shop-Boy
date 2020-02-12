@@ -23,9 +23,9 @@ object ShopHours {
         // Live example:  https://regex101.com/r/tBRHnN/1
         val pattern = Regex("""([\w-]+)\s+(\d+)(:(\d+))?\s*-\s*(\d+)(:(\d+))?""")
 
-        val mat:MatchResult? =pattern.matchEntire(s)
-        if (mat != null ){
-            val groups = mat.groups
+        val matchResult=pattern.matchEntire(s)
+        if (matchResult != null ){
+            val groups = matchResult.groups
             // TODO Week day/Weekend
             val openHour:Int = groups[2]?.value?.toIntOrNull()?:0
             val openMin:Int = groups[4]?.value?.toIntOrNull()?:0

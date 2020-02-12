@@ -8,7 +8,6 @@ import android.widget.TextView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import android.content.Intent
@@ -18,10 +17,8 @@ object PetZoo{
     var pets = ArrayList<JSONObject>()
 }
 
-
-
-class SensorListRecyclerViewAdapter(private var context: Context, private var dataList:ArrayList<JSONObject>):
-    RecyclerView.Adapter<SensorListRecyclerViewAdapter.ViewHolder>() {
+class RecomendedPetsRecyclerViewAdapter(private var context: Context, private var dataList:ArrayList<JSONObject>):
+    RecyclerView.Adapter<RecomendedPetsRecyclerViewAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return dataList.size
     }
@@ -34,7 +31,6 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
             val curItem = dataList[position]
 
             if (curItem is JSONObject) {
-
                 val petname = curItem.optString("title")
                 holder.textView.text = petname
 
@@ -54,7 +50,6 @@ class SensorListRecyclerViewAdapter(private var context: Context, private var da
             }
         }catch (e:JSONException){
             println(e.message)
-            println(e.localizedMessage)
         }
     }
 

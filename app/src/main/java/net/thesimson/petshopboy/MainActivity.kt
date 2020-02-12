@@ -6,12 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.UiThread
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Exception
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -85,7 +83,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        val adapter = SensorListRecyclerViewAdapter(this, PetZoo.pets)
+        val adapter = RecomendedPetsRecyclerViewAdapter(this, PetZoo.pets)
 
         PawCache.requestContent("https://simonsso.github.io/Pet-Shop-Boy/pets.json") {pets_json_string->
 
