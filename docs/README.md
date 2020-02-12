@@ -12,7 +12,7 @@ Android app mimicking a pet shop built in a few days just for fun!
 * Work Hours should not be 24 or larger Japanese style not supported
 * Work Hours can only be week days, weekends are not supported
 * config.json and pets.json  are not in valid json format.
-* if network is unavailable while starting app, turn [hone to reload UI when network is restored.
+* if network is unavailable while starting app, turn phone to reload UI when network is restored.
 
 ## Screenshot
 ![Screenshot fablet](Screenshot_2020-02-12-12-39-32-642_net.thesimson.petshopboy.jpg)
