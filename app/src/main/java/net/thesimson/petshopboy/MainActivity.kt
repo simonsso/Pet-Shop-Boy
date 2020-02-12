@@ -9,6 +9,7 @@ import androidx.annotation.UiThread
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.lang.Exception
 import java.util.*
@@ -63,52 +64,58 @@ class MainActivity : AppCompatActivity() {
 
         PawCache.requestContent( "https://simonsso.github.io/Pet-Shop-Boy/config.json") { config_json_string ->
             // NB file is known to be malformated json finding the outermost JSONObject
-            try {
-                val config = JSONObject(
+            val config = try {
+                 JSONObject(
                     config_json_string.substring(
                         config_json_string.indexOf("{"),
                         config_json_string.lastIndexOf("}") + 1
                     )
                 )
+            }catch (e: JSONException) {
+                // Parsing failed return an empty object
+                JSONObject()
+            }
+            // Config loaded OK, update UI!
+            this@MainActivity.runOnUiThread {
+                ShopHours.parseBuisinessHours(config.optString("workHours"))
+                ShopHours.chatEnabled = config.optBoolean("isChatEnabled")
+                ShopHours.callEnabled = config.optBoolean("isCallEnabled")
 
-                // Config loaded OK, update UI!
-                this@MainActivity.runOnUiThread {
-                    ShopHours.parseBuisinessHours(config.optString("workHours"))
-                    ShopHours.chatEnabled = config.optBoolean("isChatEnabled")
-                    ShopHours.callEnabled = config.optBoolean("isCallEnabled")
-
-                    updateCallButtonsVisability()
-                }
-            } catch (e: Exception) {
+                updateCallButtonsVisability()
             }
         }
 
         val adapter = SensorListRecyclerViewAdapter(this, PetZoo.pets)
 
         PawCache.requestContent("https://simonsso.github.io/Pet-Shop-Boy/pets.json") {pets_json_string->
-            try {
+
                 // NB file is known to be malformated json finding the outermost JSONObject
-                val temp_net_pets = JSONArray(
+            val temp_net_pets = try {
+                JSONArray(
                     pets_json_string.substring(
                         pets_json_string.indexOf("["),
                         pets_json_string.lastIndexOf("]") + 1
                     )
                 )
+            }catch (e:JSONException){
+                JSONArray()
+            }
+            this@MainActivity.runOnUiThread {
                 PetZoo.pets.clear()
                 for (i in 0 until temp_net_pets.length()) {
-                    if (temp_net_pets[i] is JSONObject) {
-                        PetZoo.pets.add(temp_net_pets[i] as JSONObject)
+                    // JSONArray is broken and will return len 11 but last item does not exist
+                    // This try will cactch such an exception
+                    try {
+                        if (temp_net_pets.getJSONObject(i) is JSONObject) {
+                            PetZoo.pets.add(temp_net_pets[i] as JSONObject)
+                        }
+                    }catch (e:JSONException){
+
                     }
                 }
-                this@MainActivity.runOnUiThread {
-                    adapter.notifyDataSetChanged()
-                }
-            }catch (e:Exception){}
+                adapter.notifyDataSetChanged()
+            }
         }
-
-
-
-//        recycler_view.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recycler_view.adapter = adapter
         adapter.notifyDataSetChanged()
     }
