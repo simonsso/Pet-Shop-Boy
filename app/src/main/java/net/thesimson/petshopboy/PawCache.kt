@@ -9,6 +9,9 @@ import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
 
 import kotlin.concurrent.thread
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 
 object PawCache {
@@ -16,57 +19,45 @@ object PawCache {
 
     val cache = ConcurrentHashMap<String, Bitmap>()
 
-    fun requestContent(url: String, onDataFetched:(String)->Unit ){
-        thread {
-            try {
-                val request = Request.Builder().url(url).build()
-                client.newCall(request)
-                    .enqueue (object :Callback  {
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) return
-                            onDataFetched(response.body!!.string())
-                        }
-                        override fun onFailure(call: Call, e: IOException) {
-                            // Do nothing on failure
-                        }
-                    })
-            }catch (e:Exception){
-                println(e.message)
-                
-            }
-        }
+    suspend fun getResponse(url : String) = suspendCoroutine<Response> {
+        val request = Request.Builder().url(url).build()
+        PawCache.client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onResponse(call: Call, response: Response) {
+                    if (!response.isSuccessful) it.resume(response)
+                }
+
+                override fun onFailure(call: Call, e: IOException) {
+                    it.resumeWithException(e)
+                }
+            })
     }
+
+    suspend fun requestContent(url: String) =
+        getResponse(url)
+
 
     // Request image, and load it into ImageView
     // Errors are ignored here- a new attempt to fetch an uncached image
     // will be made next time UI needs it...
 
-    fun requestImage(imageUrl: String, dest: ImageView) {
+    suspend fun requestImage(imageUrl: String, dest: ImageView) {
         val uiThreadHandler=Handler()
         if( cache.containsKey(imageUrl)){
             dest.setImageBitmap(cache[imageUrl])
             return
         }
-        thread {
-            try {
-                val request = Request.Builder().url(imageUrl).build()
-                client.newCall(request)
-                    .enqueue (object :Callback  {
-                        override fun onResponse(call: Call, response: Response) {
-                            if (!response.isSuccessful) return
-                            val bm = BitmapFactory.decodeStream(response.body!!.byteStream())
-                            uiThreadHandler.post(Runnable {
-                                cache[imageUrl]=bm
-                                dest.setImageBitmap(bm)
-                            })
-                        }
-                        override fun onFailure(call: Call, e: IOException) {
-                            // Do nothing on failure
-                        }
-                    })
-            }catch (e:Exception){
-                println(e.message)
-            }
+        try {
+            val response = getResponse(imageUrl)
+            val bm = BitmapFactory.decodeStream(response.body!!.byteStream())
+
+            uiThreadHandler.post(Runnable {
+                cache[imageUrl]=bm
+                dest.setImageBitmap(bm)
+            })
+        }catch (e:Exception){
+            println(e.message)
         }
     }
+
 }
