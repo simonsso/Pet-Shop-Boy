@@ -31,20 +31,20 @@ class RecomendedPetsRecyclerViewAdapter(private var context: Context, private va
             val curItem = dataList[position]
 
             if (curItem is JSONObject) {
-                val petname = curItem.optString("title")
-                holder.textView.text = petname
+                val petName = curItem.optString("title")
+                holder.textView.text = petName
 
-                val image_url = curItem.optString("image_url")
-                val content_url = curItem.optString("content_url")
+                val imageUrl = curItem.optString("image_url")
+                val contentUrl = curItem.optString("content_url")
 
-                if (image_url!=""){
-                    PawCache.requestImage(image_url,holder.icon)
+                if (imageUrl!=""){
+                    PawCache.requestImage(imageUrl,holder.icon)
                 }
 
                 holder.top.setOnClickListener {
                     val intent : Intent = Intent( context, PetBrowserActivity::class.java)
-                    intent.putExtra("loadurl",content_url)
-                    intent.putExtra("petname",petname)
+                    intent.putExtra("loadurl",contentUrl)
+                    intent.putExtra("petname",petName)
                     context.startActivity( intent )
                 }
             }

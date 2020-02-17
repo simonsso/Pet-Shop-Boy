@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.UiThread
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -18,33 +19,25 @@ class MainActivity : AppCompatActivity() {
         // Create an alertbox dialog
         val dialogBuilder = AlertDialog.Builder(this)
 
-        val storeOpenGreetingMessage:String = if( ShopHours.isShopOpen(Calendar.getInstance()) ){
-                resources.getString(R.string.thanksshopopen)
+        val storeOpenGreetingMessage= if( ShopHours.isShopOpen(Calendar.getInstance()) ){
+                R.string.thanksshopopen
             }else {
-                resources.getString(R.string.thanksshopclosed)
+                R.string.thanksshopclosed
         }
         dialogBuilder.setMessage(storeOpenGreetingMessage)
             .setCancelable(false)
-            .setPositiveButton(resources.getString(R.string.ok), DialogInterface.OnClickListener { dialog, _id ->
-                dialog.cancel()
-            })
+            .setPositiveButton(R.string.ok){ dialog, _id -> dialog.cancel() }
         val alert = dialogBuilder.create()
-        alert.setTitle(resources.getString(R.string.alerttitle))
+        alert.setTitle(R.string.alerttitle)
         alert.show()
     }
 
     @UiThread
     fun updateCallButtonsVisability(){
-        chat_button.visibility = if (ShopHours.chatEnabled) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
-        call_button.visibility = if (ShopHours.callEnabled) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        
+        chat_button.isVisible = ShopHours.chatEnabled
+        call_button.isVisible = ShopHours.callEnabled
+
         workHours.text = if (ShopHours.humanReadableSign != "") {
              resources.getString(R.string.officehours) + "  " + ShopHours.humanReadableSign
         } else {
