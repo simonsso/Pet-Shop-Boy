@@ -3,6 +3,7 @@ package net.thesimson.petshopboy
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Handler
+import android.util.Log
 import android.widget.ImageView
 import okhttp3.*
 import java.io.IOException
@@ -31,8 +32,7 @@ object PawCache {
                         }
                     })
             }catch (e:Exception){
-                println(e.message)
-                
+                Log.w( this::class.java!!.getName(),e.message)
             }
         }
     }
@@ -61,11 +61,11 @@ object PawCache {
                             })
                         }
                         override fun onFailure(call: Call, e: IOException) {
-                            // Do nothing on failure
+                            Log.d( this::class.java!!.getName(),e.message)
                         }
                     })
             }catch (e:Exception){
-                println(e.message)
+                Log.w( this::class.java!!.getName(),e.message)
             }
         }
     }

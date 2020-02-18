@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.json.JSONException
 import org.json.JSONObject
 import android.content.Intent
+import android.util.Log
 
 
 object PetZoo{
@@ -49,7 +50,7 @@ class RecomendedPetsRecyclerViewAdapter(private var context: Context, private va
                 }
             }
         }catch (e:JSONException){
-            println(e.message)
+            Log.w( this::class.java!!.getName(),e.message)
         }
     }
 
