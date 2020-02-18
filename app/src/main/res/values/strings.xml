@@ -3,7 +3,7 @@
     <string name="chatme">Chat</string>
     <string name="callme">Call</string>
     <string name="hours_not_loaded_from_config">Hours not loaded from config</string>
-    <string name="officehours">Office Hours:</string>
+    <string name="officehours">Office Hours: &#160; %1$S</string>
     <string name="notloaded">Hold on looking for work hours</string>>
     <string name="thanksshopopen">Thank you for getting in touch with us. We’ll get back to you as soon as possible</string>
     <string name="thanksshopclosed">Work hours has ended. Please contact us again on the next work day</string>

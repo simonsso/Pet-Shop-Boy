@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         call_button.isVisible = ShopHours.callEnabled
 
         workHours.text = if (ShopHours.humanReadableSign != "") {
-             resources.getString(R.string.officehours) + "  " + ShopHours.humanReadableSign
+             resources.getString(R.string.officehours, ShopHours.humanReadableSign )
         } else {
             resources.getString(R.string.hours_not_loaded_from_config)
         }
